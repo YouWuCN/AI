@@ -7,16 +7,17 @@ Created on Fri Sep 28 09:58:48 2018
 
 import numpy as np
 import matplotlib.pyplot as plt
+import keras
 from keras.datasets import cifar10
 from keras.utils import np_utils
-from keras import backend as K
+#from keras import backend as K
 
 # In *older* versions of Tensorflow/Keras you may need to adjust the image 
 # dimension ordering. If you need to, uncomment the two code lines below.
 # What we are doing is just making sure the image format is as desired. 
 # This will make the feature (x) data - i.e. the RGB pixel values - for 
 # each image have the shape 3x32x32.
-# if K.backend()=='tensorflow':          # <- Uncomment this if required
+#if K.backend()=='tensorflow':          # <- Uncomment this if required
 #    K.set_image_dim_ordering("th")      # <- Uncomment this if required
 
 # This is the main function. You need to write the getModel and fitModel functions to pass to this.
@@ -126,8 +127,33 @@ class CIFAR:
             idx = np.where(self.y_valid_raw[:]==i)[0]
             features_idx = self.x_valid_raw[idx,::]
             img_num = np.random.randint(features_idx.shape[0])
-            im = np.transpose(features_idx[img_num,::],(1,2,0))
+#            im = np.transpose(features_idx[img_num,::],(1,2,0))
+            im = np.transpose(features_idx[img_num,::],(0,1,2))
             ax.set_title(self.class_names[i])
             plt.imshow(im)
         plt.show()        
 
+
+def myGetModel(data):
+    from keras.models import Sequential
+    from keras.layers import Dense, Conv2D, Flatten
+    #create model
+    model = Sequential()
+    #add model layers
+    model.add(Conv2D(64, kernel_size=(3,3), activation='relu', input_shape=(32,32,3)))
+    model.add(Conv2D(32, kernel_size=(3,3), activation='relu'))
+    model.add(Flatten())
+    model.add(Dense(10, activation='softmax'))
+    return model
+    #TODO
+    
+
+def myFitModel(model, data):
+    model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(),
+              metrics=['accuracy'])
+    model.fit(data.x_train, data.y_train, validation_data=(data.x_test, data.y_test), epochs=3)
+    return model
+    #TODO
+
+runImageClassification(getModel=myGetModel, fitModel=myFitModel)
