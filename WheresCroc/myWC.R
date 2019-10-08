@@ -42,7 +42,7 @@ myFunction <- function(moveInfo,readings,positions,edges,probs){
     paths = bfs(cur, goal, edges)
     
     if(length(paths) == 1){
-        moveInfo$moves = c(0, 0)
+        moveInfo$moves = c(0, sample(getOptions(goal,edges),1))
     }else if(length(paths) == 2){
         moveInfo$moves = c(paths[2], 0)
     }else{
@@ -62,13 +62,13 @@ getOptions <- function(position, edges){
 transProbs <- function(moveInfo,position, edges){
     transmatrix <- matrix(nrow= 2,ncol = 2)
     options = getOptions(position,edges)
-    transmatrix[2,2] = 1/(length(options)+1)
+    transmatrix[2,2] = 1/(length(options))
     transmatrix[2,1] = 1-transmatrix[2,2]
     
     inprob = 0
     for (option in options){
         atprob = moveInfo$mem$stateprob[option]
-        inprob = atprob * 1/(length(getOptions(option,edges))+1) + inprob
+        inprob = atprob * 1/(length(getOptions(option,edges))) + inprob
     }
     transmatrix[1,2] = inprob
     transmatrix[1,1] = 1 - inprob
