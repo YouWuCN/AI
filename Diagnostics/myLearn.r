@@ -73,5 +73,11 @@ myLearn <- function(data){
     myNet <- list(prob_Pn,prob_VTB,prob_Sm,prob_Te_Pn,prob_TB_VTB,prob_Br_Sm,
                   prob_LC_Sm,prob_Dy_BrLC,prob_XR_PnTBLC)
     names(myNet) <- c('Pn','VTB','Sm','Te_Pn','TB_VTB','Br_Sm','LC_Sm','Dy_BrLC','XR_PnTBLC')
+    
+    for(i in seq(length(myNet))){
+        rownames(myNet[[i]]) <- 0:(nrow(myNet[[i]]) -1) 
+        colnames(myNet[[i]]) <- 0:(ncol(myNet[[i]]) -1)
+    }
+    
     return(myNet)
 }
