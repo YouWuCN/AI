@@ -49,22 +49,22 @@ myLearn <- function(data){
     prob_XR_PnTBLC[1,1] <- nrow(data[data$Pn==0&data$TB==0&data$LC==0&data$XR==0,])/
         nrow(data[data$Pn==0&data$TB==0&data$LC==0,])
     prob_XR_PnTBLC[1,2] = 1- prob_XR_PnTBLC[1,1]
-    prob_XR_PnTBLC[2,1] <- nrow(data[data$Pn==1&data$TB==0&data$LC==0&data$XR==0,])/
+    prob_XR_PnTBLC[2,1] <- nrow(data[data$Pn==0&data$TB==0&data$LC==1&data$XR==0,])/
         nrow(data[data$Pn==1&data$TB==0&data$LC==0,])
     prob_XR_PnTBLC[2,2] = 1- prob_XR_PnTBLC[2,1]
     prob_XR_PnTBLC[3,1] <- nrow(data[data$Pn==0&data$TB==1&data$LC==0&data$XR==0,])/
         nrow(data[data$Pn==0&data$TB==1&data$LC==0,])
     prob_XR_PnTBLC[3,2] = 1- prob_XR_PnTBLC[3,1]
-    prob_XR_PnTBLC[4,1] <- nrow(data[data$Pn==0&data$TB==0&data$LC==1&data$XR==0,])/
+    prob_XR_PnTBLC[4,1] <- nrow(data[data$Pn==0&data$TB==1&data$LC==1&data$XR==0,])/
         nrow(data[data$Pn==0&data$TB==0&data$LC==1,])
     prob_XR_PnTBLC[4,2] = 1- prob_XR_PnTBLC[4,1]
-    prob_XR_PnTBLC[5,1] <- nrow(data[data$Pn==1&data$TB==1&data$LC==0&data$XR==0,])/
+    prob_XR_PnTBLC[5,1] <- nrow(data[data$Pn==1&data$TB==0&data$LC==0&data$XR==0,])/
         nrow(data[data$Pn==1&data$TB==1&data$LC==0,])
     prob_XR_PnTBLC[5,2] = 1- prob_XR_PnTBLC[5,1]
     prob_XR_PnTBLC[6,1] <- nrow(data[data$Pn==1&data$TB==0&data$LC==1&data$XR==0,])/
         nrow(data[data$Pn==1&data$TB==0&data$LC==1,])
     prob_XR_PnTBLC[6,2] = 1- prob_XR_PnTBLC[6,1]
-    prob_XR_PnTBLC[7,1] <- nrow(data[data$Pn==0&data$TB==1&data$LC==1&data$XR==0,])/
+    prob_XR_PnTBLC[7,1] <- nrow(data[data$Pn==1&data$TB==1&data$LC==0&data$XR==0,])/
         nrow(data[data$Pn==0&data$TB==1&data$LC==1,])
     prob_XR_PnTBLC[7,2] = 1- prob_XR_PnTBLC[7,1]
     prob_XR_PnTBLC[8,1] <- nrow(data[data$Pn==1&data$TB==1&data$LC==1&data$XR==0,])/
@@ -75,7 +75,7 @@ myLearn <- function(data){
     names(myNet) <- c('Pn','VTB','Sm','Te_Pn','TB_VTB','Br_Sm','LC_Sm','Dy_BrLC','XR_PnTBLC')
     
     for(i in seq(length(myNet))){
-        rownames(myNet[[i]]) <- 0:(nrow(myNet[[i]]) -1) 
+        rownames(myNet[[i]]) <- 0:(nrow(myNet[[i]]) -1)
         colnames(myNet[[i]]) <- 0:(ncol(myNet[[i]]) -1)
     }
     
