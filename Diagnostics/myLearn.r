@@ -10,16 +10,24 @@ myLearn <- function(data){
     prob_VTB[1,2] = 1- prob_VTB[1,1]
     prob_Sm[1,1] = nrow(data[data$Sm==0,])/nrow(data)
     prob_Sm[1,2] = 1- prob_Sm[1,1]
+    
     prob_Br_Sm <- matrix(nrow = 2, ncol = 2)
     prob_Br_Sm[1,1] <- nrow(data[data$Sm==0&data$Br==0,])/nrow(data[data$Sm==0,])
     prob_Br_Sm[1,2] = 1- prob_Br_Sm[1,1]
     prob_Br_Sm[2,1] <- nrow(data[data$Sm==1&data$Br==0,])/nrow(data[data$Sm==1,])
     prob_Br_Sm[2,2] = 1- prob_Br_Sm[2,1]
+
     prob_LC_Sm <- matrix(nrow = 2, ncol = 2)
     prob_LC_Sm[1,1] <- nrow(data[data$Sm==0&data$LC==0,])/nrow(data[data$Sm==0,])
-    prob_LC_Sm[1,2] = 1- prob_LC_Sm[1,1]
+    prob_LC_Sm[1,2] = 1- prob_Br_Sm[1,1]
     prob_LC_Sm[2,1] <- nrow(data[data$Sm==1&data$LC==0,])/nrow(data[data$Sm==1,])
-    prob_LC_Sm[2,2] = 1- prob_LC_Sm[2,1]
+    prob_LC_Sm[2,2] = 1- prob_Br_Sm[2,1]
+    
+    prob_TB_VTB <- matrix(nrow = 2, ncol = 2)
+    prob_TB_VTB[1,1] <- nrow(data[data$VTB==0&data$TB==0,])/nrow(data[data$VTB==0,])
+    prob_TB_VTB[1,2] = 1- prob_TB_VTB[1,1]
+    prob_TB_VTB[2,1] <- nrow(data[data$VTB==1&data$TB==0,])/nrow(data[data$VTB==1,])
+    prob_TB_VTB[2,2] = 1- prob_TB_VTB[2,1]
     
     prob_Dy_BrLC <- matrix(nrow = 4, ncol = 2)
     prob_Dy_BrLC[1,1] <- nrow(data[data$LC==0&data$Br==0&data$Dy==0,])/nrow(data[data$LC==0&data$Br==0,])
@@ -62,8 +70,8 @@ myLearn <- function(data){
     prob_XR_PnTBLC[8,1] <- nrow(data[data$Pn==1&data$TB==1&data$LC==1&data$XR==0,])/
         nrow(data[data$Pn==1&data$TB==1&data$LC==1,])
     prob_XR_PnTBLC[8,2] = 1- prob_XR_PnTBLC[8,1]
-    myNet <- list(prob_Pn,prob_VTB,prob_Sm,prob_Te_Pn,prob_Br_Sm,
+    myNet <- list(prob_Pn,prob_VTB,prob_Sm,prob_Te_Pn,prob_TB_VTB,prob_Br_Sm,
                   prob_LC_Sm,prob_Dy_BrLC,prob_XR_PnTBLC)
-    names(myNet) <- c('Pn','VTB','Sm','Te_Pn','Br_Sm','LC_Sm','Dy_BrLC','XR_PnTBLC')
+    names(myNet) <- c('Pn','VTB','Sm','Te_Pn','TB_VTB','Br_Sm','LC_Sm','Dy_BrLC','XR_PnTBLC')
     return(myNet)
 }
