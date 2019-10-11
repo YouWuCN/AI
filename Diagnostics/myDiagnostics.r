@@ -1,5 +1,5 @@
 myDiagnose <- function(myNet,cases){
-    myNet$XR_PnTBLC[8,] = c(0.001,0.999)
+    myNet$XR_PnTBLC[8,] = c(0.0001,0.9999)
     for(n in seq(10)){
         obs = cases[n,]
         obs[,c('Pn','TB','LC','Br')]=0
@@ -19,21 +19,30 @@ myDiagnose <- function(myNet,cases){
                     prob = new_prob
                     obs = proposal
                 }else{
-                    if(randnum[1] > new_prob/prob){
+                    if(randnum[1] < new_prob/prob){
                         obs = proposal
                         prob = new_prob
-                        randnum = randnum[-1]
                     }
+                    randnum = randnum[-1]
                 }
             }
-            if(i>100){
+            if(i>300){
                 results <- results+obs[,c('Pn','TB','LC','Br')]
             }
         }
-        results = results/900
+        results = results/700
+        for(i in seq(4)){
+            if(results[i] == 0){
+                results[i] = 0.0001
+            }
+            if(results[i] == 1){
+                results[i] = 0.9999
+            }
+        }
+
         cases[n, c('Pn','TB','LC','Br')] = results
     }
-    return(cases)
+    return(data.matrix(cases[, c('Pn','TB','LC','Br')]))
 }
 
 getprob <- function(obs, myNet){
