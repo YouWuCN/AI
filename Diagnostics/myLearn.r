@@ -73,6 +73,10 @@ myLearn <- function(data){
     myNet <- list(prob_Pn,prob_VTB,prob_Sm,prob_Te_Pn,prob_TB_VTB,prob_Br_Sm,
                   prob_LC_Sm,prob_Dy_BrLC,prob_XR_PnTBLC)
     names(myNet) <- c('Pn','VTB','Sm','Te_Pn','TB_VTB','Br_Sm','LC_Sm','Dy_BrLC','XR_PnTBLC')
-    
+    for (i in seq(9)){
+        myNet[[i]][myNet[[i]][,1] == 0] = c(0.00002, 0.99998)
+        myNet[[i]][myNet[[i]][,1] == 1] = c(0.99998, 0.00002)
+    }
     return(myNet)
 }
+
