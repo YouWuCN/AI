@@ -2,22 +2,21 @@
 """
 Created on Tue Oct  8 12:20:41 2019
 
-@author: Mike
+@author: youwu
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.datasets import cifar10
 from keras.utils import np_utils
-#from keras import backend as K
+from keras import backend as K
 
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-#import os
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D#, GlobalMaxPooling2D
+from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
 from keras.layers.normalization import BatchNormalization
 
 # In *older* versions of Tensorflow/Keras you may need to adjust the image 
@@ -143,10 +142,6 @@ class CIFAR:
         plt.show()
 
 def myGetModel(data):
-#    from keras.models import Sequential
-#    from keras.layers import Dense, Dropout, Activation, Flatten
-#    from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, GlobalMaxPooling2D
-#    from keras.layers.normalization import BatchNormalization
 
     model = Sequential()
     model.add(BatchNormalization(input_shape=(32,32,3)))
@@ -183,10 +178,9 @@ def myGetModel(data):
 def myFitModel(model, data):
     batch_size = 128
     epochs = 100
-#    data_augmentation = True
 
     # initiate early stopping
-    early_stopping = EarlyStopping(monitor='val_loss',patience=5) 
+    early_stopping = EarlyStopping(monitor='val_loss',patience=6)
     # initiate optimizer
     opt = keras.optimizers.Adam(lr=0.001, decay=1e-6)
     filepath='weights-best.hdf5'
@@ -196,43 +190,17 @@ def myFitModel(model, data):
                 metrics=['accuracy'])
     checkpoint = ModelCheckpoint(filepath,monitor='val_loss', save_weights_only=True,\
                                 verbose=1,save_best_only=True, period=1)
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.3, 
-                                  patience=3, min_lr=0.00005)
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor = 0.3, 
+                                  patience=5, min_lr=0.00005)
     
-    # model.fit(data.x_train, data.y_train,
-    #         batch_size=batch_size,
-    #         epochs=epochs,
-    #         validation_data=(data.x_valid, data.y_valid),
-    #         callbacks=[checkpoint,early_stopping, reduce_lr],
-    #         shuffle=True)
     datagen = ImageDataGenerator(
-        featurewise_center=False,  # set input mean to 0 over the dataset
-        samplewise_center=False,  # set each sample mean to 0
-        featurewise_std_normalization=False,  # divide inputs by std of the dataset
-        samplewise_std_normalization=False,  # divide each input by its std
-        zca_whitening=False,  # apply ZCA whitening
-        zca_epsilon=1e-06,  # epsilon for ZCA whitening
-        rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
         # randomly shift images horizontally (fraction of total width)
-        width_shift_range=0.1,
+        width_shift_range = 0.1,
         # randomly shift images vertically (fraction of total height)
-        height_shift_range=0.1,
-        shear_range=0.,  # set range for random shear
-        zoom_range=0.,  # set range for random zoom
-        channel_shift_range=0.,  # set range for random channel shifts
-        # set mode for filling points outside the input boundaries
-        fill_mode='nearest',
-        cval=0.,  # value used for fill_mode = "constant"
-        horizontal_flip=True,  # randomly flip images
-        vertical_flip=False,  # randomly flip images
-        # set rescaling factor (applied before any other transformation)
-        rescale=None,
-        # set function that will be applied on each input
-        preprocessing_function=None,
-        # image data format, either "channels_first" or "channels_last"
-        data_format=None,
-        # fraction of images reserved for validation (strictly between 0 and 1)
-        validation_split=0.0)
+        height_shift_range = 0.1,
+        horizontal_flip = True,  # randomly flip images
+        vertical_flip = False,  # randomly flip images
+        )
 
     # Compute quantities required for feature-wise normalization
     # (std, mean, and principal components if ZCA whitening is applied).
@@ -250,4 +218,4 @@ def myFitModel(model, data):
 
     return model
 
-runImageClassification(getModel=myGetModel, fitModel=myFitModel)
+#runImageClassification(getModel=myGetModel, fitModel=myFitModel)
